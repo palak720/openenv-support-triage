@@ -1,0 +1,25 @@
+
+name: support-triage-env
+version: 1.0
+description: Real-world customer support triage simulation
+entrypoint: env.environment:SupportEnv
+
+observation_space:
+  ticket_id: str
+  message: str
+  customer_tier: str
+  timestamp: str
+
+action_space:
+  category: str
+  priority: str
+  assigned_team: str
+  response: str
+
+reward:
+  type: dense
+
+tasks:
+  - easy
+  - medium
+  - hard
