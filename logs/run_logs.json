@@ -1,0 +1,35 @@
+[
+  {
+    "ticket": "How to reset password?",
+    "action": {
+      "category": "billing",
+      "priority": "high",
+      "assigned_team": "payments",
+      "response": "We apologize for the inconvenience. Our payments team is reviewing your issue and will resolve it \u091c\u0932\u094d\u0926."
+    },
+    "reward": 1.0,
+    "timestamp": "2026-04-03 22:48:22.868720"
+  },
+  {
+    "ticket": "App crashes on checkout",
+    "action": {
+      "category": "general",
+      "priority": "low",
+      "assigned_team": "support",
+      "response": "You can resolve this using our help section. Let us know if you need further assistance."
+    },
+    "reward": 1.0,
+    "timestamp": "2026-04-03 22:48:22.869723"
+  },
+  {
+    "ticket": "END",
+    "action": {
+      "category": "technical",
+      "priority": "high",
+      "assigned_team": "engineering",
+      "response": "Our engineering team is actively investigating the issue and will fix it as soon as possible."
+    },
+    "reward": 1.0,
+    "timestamp": "2026-04-03 22:48:22.870839"
+  }
+]
