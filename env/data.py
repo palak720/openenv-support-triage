@@ -19,3 +19,21 @@ TICKETS = [
         "timestamp": "2026-03-03"
     }
 ]
+
+GROUND_TRUTH = [
+    {
+        "category": "billing",
+        "priority": "high",
+        "assigned_team": "payments"
+    },
+    {
+        "category": "technical",
+        "priority": "medium",
+        "assigned_team": "tech"
+    },
+    {
+        "category": "billing",
+        "priority": "high",
+        "assigned_team": "payments"
+    }
+]

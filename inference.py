@@ -81,7 +81,7 @@ def run(task="easy"):
 
         total_reward += reward
 
-        print(f"[STEP] step={step_num}, reward={reward}")
+        print(f"[STEP] step={step_num}, category={action.category}, priority={action.priority}, reward={reward}")
 
         step_num += 1
 
