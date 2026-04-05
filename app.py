@@ -8,6 +8,9 @@ env = SupportEnv(task="easy")  # default
 app = FastAPI()
 env = SupportEnv()
 
+@app.get("/")
+def home():
+     return {"message": "OpenEnv Support Triage API Running 🚀"}
 
 @app.get("/reset")
 def reset():
