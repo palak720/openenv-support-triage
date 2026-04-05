@@ -66,6 +66,37 @@ We built an **AI-powered triage environment** where:
 - ✅ Live deployed on Hugging Face Spaces
 
 ---
+## 🛠️ Technologies & Tools Used
+
+### 🔹 Backend
+- Python 3.10
+- FastAPI (API framework)
+- Uvicorn (ASGI server)
+
+### 🔹 AI / Environment Design
+- OpenEnv standard (step/reset/state API design)
+- Rule-based intelligent agent
+- Custom reward shaping & grading system
+
+### 🔹 Data Modeling
+- Pydantic (typed models for Observation, Action, Reward)
+
+### 🔹 Deployment
+- Docker (containerization)
+- Hugging Face Spaces (Docker-based hosting)
+
+### 🔹 Version Control
+- Git
+- GitHub
+
+### 🔹 Development Tools
+- VS Code
+- PowerShell / Terminal
+
+### 🔹 Optional (LLM Integration)
+- OpenAI API (for advanced agent reasoning - optional)
+
+----
 
 ## ⚙️ Environment Design
 
