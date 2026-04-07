@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from env.environment import SupportEnv
 from env.models import Action
 
-env = SupportEnv(task="easy")  # default
+# default environment
+env = SupportEnv(task="easy")  
 
 app = FastAPI()
 env = SupportEnv()
@@ -12,7 +13,7 @@ env = SupportEnv()
 def home():
      return {"message": "OpenEnv Support Triage API Running 🚀"}
 
-@app.get("/reset")
+@app.post("/reset")
 def reset():
     obs = env.reset()
     return obs.dict()
