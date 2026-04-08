@@ -3,6 +3,6 @@ pydantic
 fastapi
 uvicorn
 openai
-openenv>=0.2.0
+openenv==0.1.13
 pyyaml
 requests
