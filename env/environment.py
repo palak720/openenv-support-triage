@@ -11,35 +11,24 @@ class SupportEnv:
         self.index = 0
         self.done = False
 
-    # 🔁 RESET FUNCTION
     def reset(self):
         self.index = 0
         self.done = False
 
-        ticket = self.tickets[self.index]
+        ticket = self.tickets[0]
 
-        # ✅ ALWAYS return simple dict (NO Pydantic, NO class)
         return {
-            "ticket": ticket.get("ticket", "")
+            "ticket_id": ticket.get("ticket_id", ""),
+            "message": ticket.get("message", ""),
+            "customer_tier": ticket.get("customer_tier", "")
         }
 
-    # 📊 STATE (optional but good)
-    def state(self):
-        return {
-            "index": self.index,
-            "done": self.done,
-            "task": self.task
-        }
-
-    # ▶️ STEP FUNCTION
     def step(self, action):
-        # Safety check
         if self.done:
             return {}, 0.0, True, {}
 
         gt = self.ground_truth[self.index]
 
-        # 🔥 grader selection
         if self.task == "easy":
             reward = easy_grade(action, gt)
         elif self.task == "medium":
@@ -47,10 +36,8 @@ class SupportEnv:
         else:
             reward = hard_grade(action, gt)
 
-        # move next
         self.index += 1
 
-        # end condition
         if self.index >= len(self.tickets):
             self.done = True
             return {}, float(reward), True, {}
@@ -59,10 +46,10 @@ class SupportEnv:
 
         return (
             {
-        "ticket_id": ticket.get("ticket_id"),
-        "message": ticket.get("message"),
-        "customer_tier": ticket.get("customer_tier")
-    },
+                "ticket_id": ticket.get("ticket_id", ""),
+                "message": ticket.get("message", ""),
+                "customer_tier": ticket.get("customer_tier", "")
+            },
             float(reward),
             False,
             {}

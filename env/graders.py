@@ -1,11 +1,8 @@
 
 def easy_grade(action, gt):
-    score = 0.0
-
     if action.get("category") == gt.get("category"):
-        score = 1.0
-
-    return score
+        return 1.0
+    return 0.0
 
 
 def medium_grade(action, gt):
@@ -32,9 +29,7 @@ def hard_grade(action, gt):
     if action.get("assigned_team") == gt.get("assigned_team"):
         score += 0.2
 
-    # safe response check
     response = action.get("response", "")
-
     if isinstance(response, str) and len(response) > 20:
         score += 0.2
 
