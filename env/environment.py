@@ -1,25 +1,29 @@
 
-from env.models import Observation
 from env.graders import easy_grade, medium_grade, hard_grade
 from env.data import TICKETS, GROUND_TRUTH
 
 
-class SupportEnv:   
+class SupportEnv:
     def __init__(self, task="easy"):
-        self.index = 0
-        self.done = False
         self.task = task
-
         self.tickets = TICKETS
         self.ground_truth = GROUND_TRUTH
+        self.index = 0
+        self.done = False
 
+    # 🔁 RESET FUNCTION
     def reset(self):
         self.index = 0
         self.done = False
 
-        # ⚠️ convert to dict (VERY IMPORTANT)
-        return Observation(**self.tickets[self.index]).dict()
+        ticket = self.tickets[self.index]
 
+        # ✅ ALWAYS return simple dict (NO Pydantic, NO class)
+        return {
+            "ticket": ticket.get("ticket", "")
+        }
+
+    # 📊 STATE (optional but good)
     def state(self):
         return {
             "index": self.index,
@@ -27,9 +31,15 @@ class SupportEnv:
             "task": self.task
         }
 
+    # ▶️ STEP FUNCTION
     def step(self, action):
+        # Safety check
+        if self.done:
+            return {}, 0.0, True, {}
+
         gt = self.ground_truth[self.index]
 
+        # 🔥 grader selection
         if self.task == "easy":
             reward = easy_grade(action, gt)
         elif self.task == "medium":
@@ -37,14 +47,22 @@ class SupportEnv:
         else:
             reward = hard_grade(action, gt)
 
+        # move next
         self.index += 1
 
+        # end condition
         if self.index >= len(self.tickets):
             self.done = True
             return {}, float(reward), True, {}
 
+        ticket = self.tickets[self.index]
+
         return (
-            Observation(**self.tickets[self.index]).dict(),
+            {
+        "ticket_id": ticket.get("ticket_id"),
+        "message": ticket.get("message"),
+        "customer_tier": ticket.get("customer_tier")
+    },
             float(reward),
             False,
             {}
