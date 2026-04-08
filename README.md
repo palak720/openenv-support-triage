@@ -12,7 +12,7 @@ pinned: false
 # 🚀 AI Customer Support Triage Environment (OpenEnv)
 
 ## 🌐 Live Demo
-👉 https://palakguptaaa-openenv-support-triage.hf.space  
+👉 https://huggingface.co/spaces/Palakguptaaa/openenv-support-triage 
 👉 Swagger API Docs: https://palakguptaaa-openenv-support-triage.hf.space/docs  
 
 ## GitHub Repositery

@@ -1,12 +1,18 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from env.environment import Environment
+from env.environment import SupportEnv
 
 app = FastAPI()
 
 # Initialize environment
-env = Environment()
+env = SupportEnv()
 
 
 # -----------------------------
