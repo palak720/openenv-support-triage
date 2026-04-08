@@ -1,25 +1,30 @@
 from fastapi import FastAPI
 import uvicorn
-from env.environment import Environment
+from env.environment import SupportEnv
 
 app = FastAPI()
-env = Environment()
+env = SupportEnv
 
 
 @app.post("/reset")
 def reset():
     obs = env.reset()
-    return {"observation": obs}
 
-
+    return {
+        "observation": obs,
+        "reward": 0.0,
+        "done": False,
+        "info": {}
+    }
 @app.post("/step")
 def step(action: dict):
     obs, reward, done, info = env.step(action)
+
     return {
         "observation": obs,
-        "reward": reward,
-        "done": done,
-        "info": info,
+        "reward": float(reward),
+        "done": bool(done),
+        "info": info if info else {}
     }
 
 
