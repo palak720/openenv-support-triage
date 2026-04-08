@@ -3,5 +3,6 @@ pydantic
 fastapi
 uvicorn
 openai
+openenv>=0.2.0
 pyyaml
 requests

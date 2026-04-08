@@ -2,7 +2,7 @@
 name: support-triage-env
 version: 1.0
 description: Real-world customer support triage simulation
-entrypoint: env.environment:SupportEnv
+entrypoint: server.app:app
 
 observation_space:
   ticket_id: str
