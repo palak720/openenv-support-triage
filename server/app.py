@@ -1,70 +1,38 @@
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-
-
 from fastapi import FastAPI
-from pydantic import BaseModel
-from env.environment import SupportEnv
+import uvicorn
+from env.environment import Environment
 
 app = FastAPI()
-
-# Initialize environment
-env = SupportEnv()
+env = Environment()
 
 
-# -----------------------------
-# Root API
-# -----------------------------
-@app.get("/")
-def root():
-    return {"message": "OpenEnv Support Triage API"}
-
-
-# -----------------------------
-# Request model
-# -----------------------------
-class ActionRequest(BaseModel):
-    action: str
-
-
-# -----------------------------
-# RESET (MANDATORY - POST)
-# -----------------------------
 @app.post("/reset")
 def reset():
     obs = env.reset()
-
-    return {
-        "observation": obs.__dict__,
-        "reward": 0.0,
-        "done": False,
-        "info": {}
-    }
+    return {"observation": obs}
 
 
-# -----------------------------
-# STEP (MANDATORY - POST)
-# -----------------------------
 @app.post("/step")
-def step(request: ActionRequest):
-    action = request.action
-
+def step(action: dict):
     obs, reward, done, info = env.step(action)
-
     return {
-        "observation": obs.__dict__ if obs else None,
-        "reward": float(reward),
-        "done": bool(done),
-        "info": info if info else {}
+        "observation": obs,
+        "reward": reward,
+        "done": done,
+        "info": info,
     }
 
 
-# -----------------------------
-# HEALTH CHECK (optional but good)
-# -----------------------------
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+@app.get("/")
+def home():
+    return {"message": "OpenEnv Support Triage Running"}
+
+
+# ✅ REQUIRED FOR VALIDATION
+def main():
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+
+# ✅ REQUIRED ENTRY POINT
+if __name__ == "__main__":
+    main()

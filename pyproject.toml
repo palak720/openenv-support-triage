@@ -11,8 +11,8 @@ dependencies = [
     "pydantic",
     "requests",
     "openai",
-    openenv==0.1.13
+    "openenv==0.1.13",
 ]
 
 [project.scripts]
-start = "server.app:app"
+start = "server.app:main"
