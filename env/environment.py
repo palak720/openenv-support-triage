@@ -4,7 +4,7 @@ from env.graders import easy_grade, medium_grade, hard_grade
 from env.data import TICKETS, GROUND_TRUTH
 
 
-class SupportEnv:
+class SupportEnv:   
     def __init__(self, task="easy"):
         self.index = 0
         self.done = False
@@ -16,7 +16,9 @@ class SupportEnv:
     def reset(self):
         self.index = 0
         self.done = False
-        return Observation(**self.tickets[self.index])
+
+        # ⚠️ convert to dict (VERY IMPORTANT)
+        return Observation(**self.tickets[self.index]).dict()
 
     def state(self):
         return {
@@ -28,7 +30,6 @@ class SupportEnv:
     def step(self, action):
         gt = self.ground_truth[self.index]
 
-        # 🔥 Select grader based on task
         if self.task == "easy":
             reward = easy_grade(action, gt)
         elif self.task == "medium":
@@ -38,10 +39,13 @@ class SupportEnv:
 
         self.index += 1
 
-        # Episode end
         if self.index >= len(self.tickets):
             self.done = True
-            return None, reward, True, {}
+            return {}, float(reward), True, {}
 
-        # Next observation
-        return Observation(**self.tickets[self.index]), reward, False, {}
+        return (
+            Observation(**self.tickets[self.index]).dict(),
+            float(reward),
+            False,
+            {}
+        )
