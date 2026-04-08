@@ -1,222 +1,131 @@
+# OpenEnv Support Triage
 
----
-title: OpenEnv Support Triage
-emoji: 🤖
-colorFrom: blue
-colorTo: green
-sdk: docker
-app_file: app.py
-pinned: false
----
+OpenEnv Support Triage is a small support-ticket simulation environment built for agent evaluation. It exposes a FastAPI server, task definitions, deterministic graders, and baseline agents for triage workflows such as category prediction, priority assignment, and response generation.
 
-# 🚀 AI Customer Support Triage Environment (OpenEnv)
+## Links
 
-## 🌐 Live Demo
-👉 https://huggingface.co/spaces/Palakguptaaa/openenv-support-triage 
-👉 Swagger API Docs: https://palakguptaaa-openenv-support-triage.hf.space/docs  
+- Repository: https://github.com/palak720/openenv-support-triage
+- Live demo: https://huggingface.co/spaces/Palakguptaaa/openenv-support-triage
+- Swagger API docs: https://palakguptaaa-openenv-support-triage.hf.space/docs
 
-## GitHub Repositery
-https://github.com/palak720/openenv-support-triage
+## Technologies Used
 
----
+- Python 3.10+
+- FastAPI
+- Uvicorn
+- Pydantic
+- OpenEnv
+- Docker
+- Hugging Face Spaces
+- Requests
+- OpenAI Python SDK
 
-## 📌 Overview
+## What This Repo Includes
 
-This project simulates a **real-world customer support system** where an AI agent classifies, prioritizes, and responds to incoming support tickets.
+- An environment that simulates incoming customer support tickets
+- API endpoints for `reset` and `step`
+- Easy, medium, and hard task definitions
+- Deterministic grading logic
+- Baseline and advanced agent examples
+- Docker and Python packaging for deployment
 
-It follows the **OpenEnv standard**, allowing agents to interact using:
+## Project Layout
 
-- `reset()`
-- `step()`
-- `state()`
+This section describes each source and project file in the repository. Generated files such as `venv/` and `__pycache__/` are not part of the hand-written project structure.
 
----
+### Root Files
 
-## 🎯 Problem Statement
+- `README.md`: Project documentation and setup guide
+- `pyproject.toml`: Python package metadata, dependencies, and CLI entry points (`server` and `start`)
+- `requirements.txt`: Pip-compatible dependency list
+- `uv.lock`: Lockfile for reproducible installs with `uv`
+- `Dockerfile`: Container build instructions
+- `openenv.yaml`: OpenEnv project configuration
+- `inference.py`: Inference or evaluation entry script for the environment
+- `leaderboard.json`: Stored leaderboard or score summary data
+- `.gitignore`: Git ignore rules
 
-Companies receive thousands of support tickets daily.
+### Server
 
-Manual triage:
-- ❌ slow
-- ❌ inconsistent
-- ❌ expensive
+- `server/__init__.py`: Marks `server` as a Python package
+- `server/app.py`: FastAPI application, API routes, and `main()` server entry point
 
----
+### Environment
 
-## 💡 Solution
+- `env/__init__.py`: Marks `env` as a Python package
+- `env/data.py`: Ticket or environment data helpers
+- `env/environment.py`: Main support-triage environment logic
+- `env/graders.py`: Shared grading utilities used by the environment
+- `env/models.py`: Data models for observations, actions, or related objects
+- `env/reward.py`: Reward calculation logic
 
-We built an **AI-powered triage environment** where:
+### Agents
 
-- Tickets are simulated
-- An agent makes decisions
-- A scoring system evaluates performance
+- `agent/__init__.py`: Marks `agent` as a Python package
+- `agent/baseline.py`: Baseline support-triage agent
+- `agent/advanced_agent.py`: More advanced agent implementation
 
----
+### Graders
 
-## 🧠 Features
+- `graders/__init__.py`: Marks `graders` as a Python package
+- `graders/easy_grader.py`: Grader for the easy task
+- `graders/medium_grader.py`: Grader for the medium task
+- `graders/hard_grader.py`: Grader for the hard task
 
-- ✅ Real-world simulation (support tickets)
-- ✅ OpenEnv-compliant API
-- ✅ Multi-task evaluation (easy → medium → hard)
-- ✅ Deterministic graders (0.0–1.0 scoring)
-- ✅ Memory-based agent reasoning
-- ✅ Logging system (run_logs.json)
-- ✅ Leaderboard tracking
-- ✅ Fully Dockerized deployment
-- ✅ Live deployed on Hugging Face Spaces
+### Tasks
 
----
-## 🛠️ Technologies & Tools Used
+- `tasks/__init__.py`: Marks `tasks` as a Python package
+- `tasks/easy_task.py`: Easy task definition
+- `tasks/medium.py`: Medium task definition
+- `tasks/hard_task.py`: Hard task definition
 
-### 🔹 Backend
-- Python 3.10
-- FastAPI (API framework)
-- Uvicorn (ASGI server)
+### Logs
 
-### 🔹 AI / Environment Design
-- OpenEnv standard (step/reset/state API design)
-- Rule-based intelligent agent
-- Custom reward shaping & grading system
+- `logs/run_logs.json`: Run history or evaluation logs
 
-### 🔹 Data Modeling
-- Pydantic (typed models for Observation, Action, Reward)
+## API
 
-### 🔹 Deployment
-- Docker (containerization)
-- Hugging Face Spaces (Docker-based hosting)
+The FastAPI app lives in `server/app.py`.
 
-### 🔹 Version Control
-- Git
-- GitHub
+Available endpoints:
 
-### 🔹 Development Tools
-- VS Code
-- PowerShell / Terminal
+- `GET /`: Health check
+- `POST /reset`: Reset the environment and return the initial observation
+- `POST /step`: Submit an action and receive the next observation, reward, and done flag
 
-### 🔹 Optional (LLM Integration)
-- OpenAI API (for advanced agent reasoning - optional)
+## Local Development
 
-----
-
-## ⚙️ Environment Design
-
-### 📥 Observation Space
-
-| Field | Type |
-|------|-----|
-| ticket_id | string |
-| message | string |
-| customer_tier | string |
-| timestamp | string |
-
----
-
-### 📤 Action Space
-
-| Field | Type |
-|------|-----|
-| category | string |
-| priority | string |
-| assigned_team | string |
-| response | string |
-
----
-
-## 🧪 Tasks
-
-| Task | Description |
-|------|------------|
-| Easy | Predict ticket category |
-| Medium | Category + priority |
-| Hard | Full triage (category + priority + response) |
-
----
-
-## 📊 Reward System
-
-- Continuous score: **0.0 → 1.0**
-- Partial credit for correct decisions
-- Penalizes incorrect classification
-- Rewards meaningful responses
-
----
-
-## 🤖 Agent Design
-
-### Current Implementation:
-- Rule-based intelligent agent
-- Memory-enhanced decisions
-- Fallback-safe logic
-
-### Optional:
-- LLM-based agent (OpenAI integration supported)
-
----
-
-## 🔄 API Endpoints
-
-| Endpoint | Method | Description |
-|---------|--------|------------|
-| `/` | GET | Health check |
-| `/reset` | POST | Reset environment |
-| `/step` | POST | Take action |
-| `/state` | GET | Get current state |
-
----
-
-## ▶️ Run Locally
+### Option 1: pip
 
 ```bash
-git clone <repo>
-cd openenv-support-triage
-
 pip install -r requirements.txt
-uvicorn app:app --reload
+python -m uvicorn server.app:app --reload --host 0.0.0.0 --port 7860
+```
 
-## 🐳 Run with Docker
+### Option 2: package entry point
 
-docker build -t openenv .
-docker run -p 8000:8000 openenv
+After installing the project as a package, you can run either script entry point:
 
-📁 Project Structure
-openenv-support-triage/
-│
-├── env/              # environment logic
-├── agent/            # agent implementations
-├── graders/          # scoring system
-├── tasks/            # task definitions
-├── logs/             # run logs
-│
-├── app.py            # FastAPI app
-├── Dockerfile
-├── requirements.txt
-├── openenv.yaml
-├── leaderboard.json
-├── README.md
+```bash
+server
+```
 
+or
 
-## 📈 Sample Output
-Ticket: Payment failed but money deducted
-Action: billing, high, payments team
-Reward: 0.9
+```bash
+start
+```
 
+Both commands map to `server.app:main`.
 
-## 🏆 Results
-Average Score (Hard Task): ~0.8
-Demonstrates intelligent decision-making
-Robust evaluation system
+## Docker
 
+```bash
+docker build -t openenv-support-triage .
+docker run -p 7860:7860 openenv-support-triage
+```
 
-##🚀 Future Improvements
-🔹 Frontend dashboard (React)
-🔹 Real LLM integration
-🔹 Multi-agent comparison
-🔹 Analytics visualization
+## Notes
 
-
-##🧠 Key Learnings
-Environment design for AI agents
-Reward shaping techniques
-API-based agent interaction
-Deployment with Docker + Hugging Face
-
+- The package now exposes a `server` script for multi-mode deployment compatibility.
+- If you add new source files later, this README should be updated so the file list stays accurate.
