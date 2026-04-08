@@ -3,11 +3,21 @@
 name = "openenv-support-triage"
 version = "0.1.0"
 description = "OpenEnv Support Triage Environment"
-authors = [{name = "Palak Kasaudhan"}]
+authors = [{name = "Palak"}]
+readme = "README.md"
+requires-python = ">=3.10"
+
 dependencies = [
     "fastapi",
-    "uvicorn"
+    "uvicorn",
+    "pydantic",
+    "requests"
 ]
 
-[tool.setuptools]
-packages = ["env", "agent", "graders", "tasks"]
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["env*", "agent*", "graders*", "tasks*"]
