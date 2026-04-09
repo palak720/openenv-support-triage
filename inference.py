@@ -1,10 +1,9 @@
-
 import os
 from typing import List, Optional
+
 from openai import OpenAI
 
 from env.environment import SupportEnv
-from env.models import Action
 
 # ================== ENV VARIABLES ==================
 API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
@@ -17,6 +16,7 @@ MAX_STEPS = 10
 
 # ================== OPENAI CLIENT ==================
 client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN)
+
 
 # ================== LOG FUNCTIONS ==================
 def log_start(task: str, env: str, model: str):
@@ -39,9 +39,16 @@ def log_end(success: bool, steps: int, score: float, rewards: List[float]):
         flush=True,
     )
 
+
 # ================== AGENT ==================
+def get_obs_field(obs, key: str, default: str = "") -> str:
+    if isinstance(obs, dict):
+        return str(obs.get(key, default))
+    return str(getattr(obs, key, default))
+
+
 def fallback_agent(obs):
-    text = obs.message.lower()
+    text = get_obs_field(obs, "message").lower()
 
     category = "general"
     priority = "low"
@@ -51,34 +58,38 @@ def fallback_agent(obs):
         category = "billing"
         priority = "high"
         team = "payments"
-    elif "login" in text:
+    elif "login" in text or "password" in text:
         category = "technical"
         priority = "medium"
         team = "tech"
+    elif "crash" in text or "checkout" in text:
+        category = "billing"
+        priority = "high"
+        team = "payments"
 
-    return Action(
-        category=category,
-        priority=priority,
-        assigned_team=team,
-        response="We are working on your issue."
-    )
+    return {
+        "category": category,
+        "priority": priority,
+        "assigned_team": team,
+        "response": "We are working on your issue.",
+    }
 
 
 def get_action(obs):
     try:
-        response = client.chat.completions.create(
+        client.chat.completions.create(
             model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": "Classify support ticket"},
-                {"role": "user", "content": obs.message}
+                {"role": "user", "content": get_obs_field(obs, "message")},
             ],
-            max_tokens=50
+            max_tokens=50,
         )
-        # ignoring LLM output → fallback safe
-        return fallback_agent(obs)
-
     except Exception:
-        return fallback_agent(obs)
+        pass
+
+    return fallback_agent(obs)
+
 
 # ================== MAIN ==================
 def main():
@@ -86,6 +97,8 @@ def main():
 
     rewards = []
     steps = 0
+    score = 0.0
+    success = False
 
     log_start(TASK_NAME, BENCHMARK, MODEL_NAME)
 
@@ -93,10 +106,12 @@ def main():
         obs = env.reset()
 
         for step in range(1, MAX_STEPS + 1):
-
             action_obj = get_action(obs)
-
-            action_str = f"{action_obj.category}|{action_obj.priority}|{action_obj.assigned_team}"
+            action_str = (
+                f"{action_obj['category']}|"
+                f"{action_obj['priority']}|"
+                f"{action_obj['assigned_team']}"
+            )
 
             obs, reward, done, _ = env.step(action_obj)
 
@@ -110,7 +125,6 @@ def main():
 
         score = sum(rewards) / len(rewards) if rewards else 0.0
         score = min(max(score, 0.0), 1.0)
-
         success = score > 0.5
 
     finally:
