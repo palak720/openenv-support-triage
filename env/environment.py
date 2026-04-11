@@ -1,5 +1,11 @@
 
-from env.graders import easy_grade, medium_grade, hard_grade
+try:
+    from env.graders import grade_easy, grade_medium, grade_hard
+except ImportError:
+    from graders.easy_grader import grade as grade_easy
+    from graders.medium_grader import grade as grade_medium
+    from graders.hard_grader import grade as grade_hard
+
 from env.data import TICKETS, GROUND_TRUTH
 
 
@@ -30,11 +36,11 @@ class SupportEnv:
         gt = self.ground_truth[self.index]
 
         if self.task == "easy":
-            reward = easy_grade(action, gt)
+            reward = grade_easy(action, gt)
         elif self.task == "medium":
-            reward = medium_grade(action, gt)
+            reward = grade_medium(action, gt)
         else:
-            reward = hard_grade(action, gt)
+            reward = grade_hard(action, gt)
 
         self.index += 1
 

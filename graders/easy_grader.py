@@ -1,5 +1,9 @@
 
-def grade(action, ground_truth):
-    if action.category == ground_truth["category"]:
-        return 1.0
-    return 0.0
+def grade(output, expected):
+    """
+    Check if predicted category matches expected category
+    """
+    try:
+        return 1.0 if output.get("category") == expected.get("category") else 0.0
+    except:
+        return 0.0

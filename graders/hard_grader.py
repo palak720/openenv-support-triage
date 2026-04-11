@@ -1,18 +1,23 @@
 
-def grade(action, ground_truth):
-    score = 0.0
+def grade(output, expected):
+    """
+    Check category, priority, team, response
+    """
+    try:
+        score = 0.0
 
-    if action.category == ground_truth["category"]:
-        score += 0.3
+        if output.get("category") == expected.get("category"):
+            score += 0.25
 
-    if action.priority == ground_truth["priority"]:
-        score += 0.2
+        if output.get("priority") == expected.get("priority"):
+            score += 0.25
 
-    if action.assigned_team == ground_truth["assigned_team"]:
-        score += 0.2
+        if output.get("team") == expected.get("team"):
+            score += 0.25
 
-    # response quality check
-    if action.response and len(action.response.strip()) > 30:
-        score += 0.3
+        if output.get("response") == expected.get("response"):
+            score += 0.25
 
-    return score
+        return score
+    except:
+        return 0.0

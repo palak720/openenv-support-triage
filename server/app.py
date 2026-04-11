@@ -1,7 +1,8 @@
-
 from fastapi import FastAPI
 import uvicorn
 from env.environment import SupportEnv
+from graders import GRADERS
+from tasks import TASKS
 
 app = FastAPI()
 env = SupportEnv()
@@ -29,6 +30,28 @@ def step(action: dict):
         "done": bool(done),
         "info": info if info else {}
     }
+
+
+@app.get("/tasks")
+def list_tasks():
+    return {"tasks": TASKS}
+
+
+@app.post("/grader")
+def grade(payload: dict):
+    task_id = payload.get("task_id") or payload.get("task")
+    action = payload.get("action", {})
+    reward = payload.get("reward")
+    ground_truth = payload.get("ground_truth", {})
+
+    if reward is not None:
+        return {"score": float(reward)}
+
+    grader = GRADERS.get(str(task_id))
+    if grader is None:
+        return {"score": 0.0, "error": f"Unknown task_id: {task_id}"}
+
+    return {"score": float(grader(action, ground_truth))}
 
 
 @app.get("/")

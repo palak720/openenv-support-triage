@@ -1,11 +1,17 @@
 
-def grade(action, ground_truth):
-    score = 0.0
+def grade(output, expected):
+    """
+    Check category + priority
+    """
+    try:
+        score = 0.0
 
-    if action.category == ground_truth["category"]:
-        score += 0.5
+        if output.get("category") == expected.get("category"):
+            score += 0.5
 
-    if action.priority == ground_truth["priority"]:
-        score += 0.5
+        if output.get("priority") == expected.get("priority"):
+            score += 0.5
 
-    return score
+        return score
+    except:
+        return 0.0
